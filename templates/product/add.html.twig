@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produkt hinzufügen{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+        <h2>Produkt für Firma "{{company.name}}" hinzufügen</h2>
+
+        {{form(form)}}
+        
+        </div>       
+    </div>
+{% endblock %}

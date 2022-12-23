@@ -14,8 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin')]
 class AdminUserController extends AbstractController
 {
+    /**
+     * Class constructor.
+     */
+    public function __construct(private EntityManagerInterface $em)
+    {
+    }
+
     #[Route('/user/add', name: 'admin_user_add')]
-    public function add(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+    public function add(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -26,15 +33,27 @@ class AdminUserController extends AbstractController
             //Password hashen
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
 
+            //Role setting 
+            $user->setRoles(['ROLE_USER']);
+
             //User persistieren
-            $em->persist($user);
+            $this->em->persist($user);
 
             //Dadtenbank schreiben
-            $em->flush();
+            $this->em->flush();
+
+            return $this->redirectToRoute('admin_user_list');
         }
 
         return $this->render('admin_user/add.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/users', name: 'admin_user_list')]
+    public function list(): Response
+    {
+        return $this->render('admin_user/list.html.twig', 
+        ['users' => $this->em->getRepository(User::class)->findUsers(),]);
     }
 }

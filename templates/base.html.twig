@@ -13,6 +13,11 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% if app.user %}
+            {% include '_includes/_navbar.html.twig' %}
+        {% endif %}
+        <div class="container mt-5">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>
