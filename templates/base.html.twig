@@ -15,7 +15,9 @@
     <body>
         {% if app.user %}
             {% include '_includes/_navbar.html.twig' %}
+            {% include '_includes/_flashMessages.html.twig' %}
         {% endif %}
+
         <div class="container mt-5">
             {% block body %}{% endblock %}
         </div>

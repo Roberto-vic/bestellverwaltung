@@ -21,7 +21,7 @@ class AdminUserController extends AbstractController
     {
     }
 
-    #[Route('/user/add', name: 'admin_user_add')]
+    #[Route('/user/add/', name: 'admin_user_add')]
     public function add(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
@@ -42,7 +42,6 @@ class AdminUserController extends AbstractController
             //Dadtenbank schreiben
             $this->em->flush();
 
-            return $this->redirectToRoute('admin_user_list');
         }
 
         return $this->render('admin_user/add.html.twig', [

@@ -6,6 +6,7 @@ use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 class Company
@@ -13,12 +14,15 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('company')]
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Groups('company')]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Product::class, orphanRemoval: true)]
+    #[Groups('company')]
     private Collection $products;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Order::class, orphanRemoval: true)]
