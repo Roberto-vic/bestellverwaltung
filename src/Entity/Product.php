@@ -9,14 +9,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
-    #[Groups("company", "product")]
+    #[Groups("company")]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Groups("company", "product")]
+    #[Groups("company")]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]

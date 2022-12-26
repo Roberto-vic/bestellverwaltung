@@ -2,6 +2,9 @@
 
 namespace App\Security;
 
+use App\Entity\User;
+use PhpParser\Node\Expr\Cast\String_;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,37 +30,33 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
+        $email = (string)$request->request->get('email', '');
+        $password = (string)$request->request->get('password', '');
+        $csrfToken = (string)$request->request->get('_csrf_token');
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $csrfToken),
             ]
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $user = $token->getUser();
+        if (!$user instanceof User) {
+            throw new InvalidTypeException('The user must be an instance of User.');
+        }
 
-        if(in_array('ROLE_ADMIN', $token->getUser()->getRoles())){
+        if(in_array('ROLE_ADMIN', $user->getRoles())){
             return new RedirectResponse($this->urlGenerator->generate('admin_home'));
         }
 
         return new RedirectResponse($this->urlGenerator->generate('customer_home'));
-
-        /* if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        } */
-
-
-
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string

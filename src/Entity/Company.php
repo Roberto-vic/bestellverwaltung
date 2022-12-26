@@ -23,12 +23,21 @@ class Company
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Product::class, orphanRemoval: true)]
     #[Groups('company')]
+    /** 
+     * @var Collection<int, Product> $products
+    */
     private Collection $products;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Order::class, orphanRemoval: true)]
+    /** 
+     * @var Collection<int, Order> $orders 
+    */
     private Collection $orders;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
+    /** 
+     * @var Collection<int, User> $users 
+    */
     private Collection $users;
 
     public function __construct()

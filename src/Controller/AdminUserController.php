@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,9 +51,10 @@ class AdminUserController extends AbstractController
     }
 
     #[Route('/users', name: 'admin_user_list')]
-    public function list(): Response
+    public function list(UserRepository $userRepository): Response
     {
         return $this->render('admin_user/list.html.twig', 
-        ['users' => $this->em->getRepository(User::class)->findUsers(),]);
+        ['users' => $userRepository->findUsers(),
+    ]);
     }
 }

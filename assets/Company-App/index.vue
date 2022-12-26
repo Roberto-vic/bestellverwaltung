@@ -2,7 +2,10 @@
 
     <div class="container">
         <div class="row">
-            <h1>Hallo Company</h1>
+            <h1>Firmenübersicht</h1>
+            <company-table-view :companies="companies"></company-table-view>
+            <router-link to="/admin/companies">Home</router-link>
+            <router-view />
         </div>
     </div>
 
@@ -10,8 +13,13 @@
 
 <script>
 
+    import CompanyTableView from './components/CompanyTableView';
+
     export default {
         name: 'Company-App-Index',
+        components: {
+            CompanyTableView,
+        },
         data: function () {
             return {
                 companies: [],
@@ -19,7 +27,6 @@
         },
         mounted() {
             this.$store.dispatch('loadCompanies').then(companies => {
-                console.log(companies);
                 this.companies = companies;
             });
         }
